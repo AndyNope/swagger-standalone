@@ -1,0 +1,351 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: Admin5 API
+  description: ''
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/OLM_1/Admin5/1.0
+    
+paths:
+  /mc/templates/:
+    post:
+      tags:
+        - Templates
+      summary: Legt ein Template an
+      requestBody:
+        $ref: '#/components/requestBodies/TemplateUpload'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+        400:
+          $ref: '#/components/responses/BadRequest'          
+  /mc/templates/search/:
+    post:
+      tags:
+        - Templates
+      summary: Liefert die gewünschten Templates
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TemplateSearchItem'
+        400:
+          $ref: '#/components/responses/BadRequest'
+  /mc/templates/{id}/:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      tags:
+        - Templates
+      summary: Liefert ein Template
+      responses:
+        200:
+          $ref: '#/components/responses/Template'
+        400:
+          $ref: '#/components/responses/BadRequest'
+    post:
+      tags:
+        - Templates
+      summary: Reupload eines Templates
+      requestBody:
+        $ref: '#/components/requestBodies/TemplateUpload'
+      responses:
+        204:
+          description: No Content
+        400:
+          $ref: '#/components/responses/BadRequest'
+    put:
+      tags:
+        - Templates
+      summary: Ändert ein Template
+      requestBody:
+        $ref: '#/components/requestBodies/TemplatePut'
+      responses:
+        204:
+          description: No Content
+        400:
+          $ref: '#/components/responses/BadRequest'
+    delete:
+      tags:
+        - Templates
+      summary: Löscht ein Template
+      responses:
+        204:
+          description: No Content
+        400:
+          $ref: '#/components/responses/BadRequest'            
+  /mc/types/:
+    get:
+      tags:
+        - Templates
+      summary: Liefert die Template-Typen
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        subCategories:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              name:
+                                type: string
+                
+      
+components:
+  requestBodies:
+    TemplateUpload:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/TemplateUpload'
+    TemplatePut:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              status:
+                type: string
+                enum:
+                  - ACTIVE
+                  - DRAFT
+                  - DELETED
+              subject:
+                type: object
+                properties:
+                  de:
+                    type: string
+                    format: byte
+                  fr:
+                    type: string
+                    format: byte
+                  en:
+                    type: string
+                    format: byte
+              utm:
+                type: object
+                properties:
+                  source:
+                    type: string
+                  medium:
+                    type: string
+                  campaign:
+                    type: string
+              links:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    url:
+                      type: object
+                      properties:
+                        de:
+                          type: string
+                        fr:
+                          type: string
+                        en:
+                          type: string
+                    tags:
+                      type: array
+                      items:
+                        type: string      
+  responses:
+    Template:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TemplateItem'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fieldName:
+                          type: string
+  schemas:
+    TemplateUpload:
+      type: object
+      properties:
+        file1:
+          type: string
+          format: binary
+        file2:
+          type: string
+          format: binary
+        file3:
+          type: string
+          format: binary
+        file4:
+          type: string
+          format: binary
+        file5:
+          type: string
+          format: binary
+        file6:
+          type: string
+          format: binary
+        file7:
+          type: string
+          format: binary
+        type:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+    TemplateSearchItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DELETED
+        type:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        datetime:
+          type: string
+          example: 2022-12-04 12:00:00
+    TemplateItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - DRAFT
+            - DELETED
+        type:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        datetime:
+          type: string
+          example: 2022-12-04 12:00:00
+        subject:
+          type: object
+          properties:
+            de:
+              type: string
+              format: byte
+            fr:
+              type: string
+              format: byte
+            en:
+              type: string
+              format: byte
+        content:
+          type: object
+          properties:
+            text:
+              type: object
+              properties:
+                de:
+                  type: string
+                  format: byte
+                fr:
+                  type: string
+                  format: byte
+                en:
+                  type: string
+                  format: byte
+            html:
+              type: object
+              properties:
+                de:
+                  type: string
+                  format: byte
+                fr:
+                  type: string
+                  format: byte
+                en:
+                  type: string
+                  format: byte
+        links:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              url:
+                type: object
+                properties:
+                  de:
+                    type: string
+                  fr:
+                    type: string
+                  en:
+                    type: string
+              tags:
+                type: array
+                items:
+                  type: string

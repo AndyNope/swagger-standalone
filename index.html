@@ -1,0 +1,76 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+    <link rel="stylesheet" type="text/css" href="index.css" />
+    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+	  <style>
+	  	.topbar, .link{
+		  display:none;
+		  }
+		.btn{
+			cursor:pointer;
+		  }
+		  .sidenav {
+			  height: 100%;
+			  width: 160px;
+			  position: fixed;
+			  z-index: 1;
+			  top: 0;
+			  left: 0;
+			  background-color: #111;
+			  overflow-x: hidden;
+			  padding-top: 20px;
+			}
+
+			.sidenav p {
+			  padding: 6px 8px 6px 16px;
+			  text-decoration: none;
+			  font-size: 25px;
+			  color: #818181;
+			  display: block;
+			}
+
+			.sidenav p:hover {
+			  color: #f1f1f1;
+			}
+		  @media screen and (max-height: 450px) {
+			  .sidenav {padding-top: 15px;}
+			  .sidenav p {font-size: 18px;}
+			}
+	  </style>
+  </head>
+
+  <body>
+	<div class="sidenav">
+	  <p onclick="loadFromURL('testapi.yml')" class="btn">Testapi</p>
+	  <p onclick="loadFromURL('domains.yml')" class="btn">Domains</p>
+	</div>
+    <div id="swagger-ui">
+	  </div>
+    <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
+    <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"></script>
+    <script src="./swagger-initializer.js" charset="UTF-8"> </script>
+	  <script>
+	  	function loadFromURL(file){
+			 	window.ui = SwaggerUIBundle({
+				url: "https://apps-stage.kreativmedia.ch/swagger/" + file,
+				dom_id: '#swagger-ui',
+				deepLinking: true,
+				presets: [
+				  SwaggerUIBundle.presets.apis,
+				  SwaggerUIStandalonePreset
+				],
+				plugins: [
+				  SwaggerUIBundle.plugins.DownloadUrl
+				],
+				layout: "StandaloneLayout"
+			  });	
+		}
+	  </script>
+  </body>
+</html>

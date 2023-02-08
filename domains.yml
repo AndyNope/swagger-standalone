@@ -1,0 +1,190 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  title: Admin5 API
+  description: ""
+servers:
+  - description: Domainsverwaltung vom Hostingvertrag
+    url: https://my.kreativmedia.ch/api/contracts/{id}
+paths:
+  /domains/:
+    get:
+      tags:
+        - Domains
+      summary: Holt alle domains vom Hostingvertrag.
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      status:
+                        type: object
+                        properties:
+                          dnssec:
+                            type: object
+                            properties:
+                              de:
+                                type: string
+                              fr:
+                                type: string
+                              en:
+                                type: string
+                          ssl:
+                            type: object
+                            properties:
+                              de:
+                                type: string
+                              fr:
+                                type: string
+                              en:
+                                type: string
+                      permissions:
+                        type: array
+                        items:
+                          type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /domain/{name}/:
+    parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Domains
+      summary: Liefert Domaineinstellung und Statuswerte
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ssl:
+                    type: boolean
+                  dnssec:
+                    type: boolean
+                  status:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        dnssec:
+                          type: string
+                        ssl:
+                          type: string
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /domain/{name}/dnssec/:
+    parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Domains
+      summary: Liefert dnssec keys
+      responses:
+        "200":
+          $ref: "#/components/responses/DNSSEC"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+    put:
+      tags:
+        - Domains
+      summary: Speichert DNSSEC-Einstellung
+      requestBody:
+        $ref: "#/components/requestBodies/DomainDNSSEC"
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  /domain/{name}/ssl/:
+    parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      tags:
+        - Domains
+      summary: Speichert SSL-Einstellung
+      requestBody:
+        $ref: "#/components/requestBodies/DomainSSL"
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+  
+components:
+  requestBodies:
+    DomainDNSSEC:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DNSSEC"
+    DomainSSL:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SSL"
+  responses:
+    DNSSEC:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DNSSECDATA"
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  fields:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        fieldName:
+                          type: string
+  schemas:
+    DNSSEC:
+      type: object
+      properties:
+        dnssec:
+          type: boolean
+    SSL:
+      type: object
+      properties:
+        ssl:
+          type: boolean
+    DNSSECDATA:
+      type: object
+      properties:
+        dsData:
+          type: string
+        keyData:
+          type: string
+        
